@@ -1,0 +1,21 @@
+.frame-container {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: lightblue;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    .sidebar {
+        width: 20vw;
+        background-color: red;
+    }
+    .main {
+        width: 80vw;
+        background-color: green;
+    }
+}
+

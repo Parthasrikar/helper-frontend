@@ -1,0 +1,47 @@
+<div class="container">
+    <div class="logoandsearch">
+        <div class="logo">
+    <img src="../../assets/home-button (1).png" alt="logo">
+    <div class="logo-text">
+      <h2>Manage</h2>
+      <p>By, ASBL | FINANCE</p>
+    </div>
+  </div>
+  <div class="search-container"> 
+    <input type="text" placeholder="Search">
+    <mat-icon class="search-icon">search</mat-icon>
+  </div>
+    </div>
+    
+  <nav class="sidebar">
+    @for (department of departmentKeys; track department) {
+      <div class="department-section">
+        <h3 class="department-title">{{ department }}</h3>
+        <ul>
+          @for (link of sidebarData[department]; track link.path) {
+            <li>
+              <a [routerLink]="link.path" routerLinkActive="active">
+                 <mat-icon>{{ link.icon }}</mat-icon>
+                <span>{{ link.label }}</span>
+              </a>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+  </nav>
+
+  <div class="footer">
+    <div class="profilewithtext">
+        <div class="circle"><span>UD</span></div>
+    <div class="text">
+        <h3>Uday</h3>
+    <p>ASBL Springs</p>
+    </div>
+    </div>
+    
+    
+
+    <mat-icon>keyboard_arrow_right</mat-icon>
+  </div>
+</div>
