@@ -27,6 +27,7 @@ export enum Roles {
 }
 
 export interface Helper {
+  _id : string;
   id: string;
   name: string;
   typeOfService: Roles;

@@ -1,1 +1,160 @@
-<p>helperview works!</p>
+<div class="container">
+
+    <div class="height20">
+        <header>
+            <h2>Helpers</h2>
+            <mat-icon>more_vert</mat-icon>
+        </header>
+
+        <div class="options">
+            <div class="controllers">
+                <div (click)="showsortoptions()" class="icon">
+                    <mat-icon class="rotate">compare_arrows</mat-icon>
+                </div>
+                <div class="icon">
+                    <mat-icon>filter_list</mat-icon>
+                </div>
+
+                <div class="icon">
+                    <mat-icon>calendar_today</mat-icon>
+                </div>
+
+
+                <input type="text" placeholder="Name, Employee ID, Phone">
+
+            </div>
+            <div class="addhelperdiv">
+                <div class="icon">
+                    <mat-icon>download</mat-icon>
+                </div>
+
+                <button> <mat-icon>add</mat-icon><a routerLink="/dashboard/helpers/addhelper">add helper</a></button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="helpers">
+        <div class="helperlist">
+            <div class="listcontainer">
+                @for (helper of helpersList; track $index) {
+                <div class="helper" (click)="changeinital($index)" [ngClass]="{'active' : $index === initalActive}">
+                    <div class="profilewithtext">
+                        <div class="circle" [style.background]="profileColors[$index % profileColors.length]">
+                            <span>{{helper.name[0].toLocaleUpperCase()}}</span>
+                        </div>
+                        <div class="text">
+                            <h3>{{helper.name}}</h3>
+                            <p>{{helper.typeOfService}}</p>
+                        </div>
+                    </div>
+                    <p>0 Households</p>
+                </div>
+                }
+            </div>
+
+        </div>
+
+        <div class="helperdetails">
+            @if (loading()) {
+                <div>
+                    loading details
+                </div>
+            }
+            @else {
+                <div class="detailscontainer">
+                <div class="detheader">
+                    <div class="profilewithtext">
+                        <div class="circle" [style.background]="profileColors[initalActive % profileColors.length]">
+                            <span>{{singleHelper.name[0].toLocaleUpperCase()}}</span>
+                        </div>
+                        <div class="text">
+                            <h3>{{singleHelper.name}}</h3>
+                            <p>{{singleHelper.typeOfService}}</p>
+                        </div>
+                    </div>
+
+                    <div class="buttons">
+                        <div class="icon"><mat-icon>edit</mat-icon></div>
+                        <div (click)="deleteHelper(singleHelper._id)" class="icon"><mat-icon>delete</mat-icon></div>
+                    </div>
+                    
+                </div>
+                <section>
+                    <div class="title">
+                        <h4>EMPLOYEE ID</h4>
+                        <p></p>
+                    </div>
+                    <div class="dets">
+                        <h5>identification card</h5>
+                        <p>-</p>
+
+                    </div>
+
+                    <div class="dets">
+                        <h5>employee code</h5>
+                        <p>{{singleHelper.employeeId}}</p>
+                        
+                    </div>
+                </section>
+
+                <section>
+                    <div class="title">
+                        <h4>PERSONAL  DETAILS</h4>
+                        <p></p>
+                    </div>
+                    <div class="dets">
+                        <h5>GENDER</h5>
+                        <p>{{singleHelper.gender}}</p>
+
+                    </div>
+
+                    <div class="dets">
+                        <h5>LANGUAGES</h5>
+                        <p>{{singleHelper.languages}}</p>
+                        
+                    </div>
+
+                    <div class="dets">
+                        <h5>email</h5>
+                        <p>{{singleHelper.email}}</p>
+                        
+                    </div>
+
+                    <div class="dets">
+                        <h5>kyc document</h5>
+                        <p>-</p>
+                        
+                    </div>
+                </section>
+
+                <section>
+                    <div class="title">
+                        <h4>SERVICE DETAILS</h4>
+                        <p></p>
+                    </div>
+                    <div class="dets">
+                        <h5>type</h5>
+                        <p>{{singleHelper.typeOfService}}</p>
+
+                    </div>
+
+                    <div class="dets">
+                        <h5>organisation</h5>
+                        <p>{{singleHelper.organization}}</p>
+                        
+                    </div>
+
+                    <div class="dets">
+                        <h5>joined on</h5>
+                        <p>{{singleHelper.createdAt}}</p>
+                        
+                    </div>
+                </section>
+            </div>
+            }
+            
+        </div>
+    </div>
+</div>
