@@ -4,12 +4,12 @@ import { RouterLink } from '@angular/router';
 import { HelperService } from '../../../service/helper.service';
 import { Helper } from '../../../model/helper.model';
 import { Observable } from 'rxjs';
-import { NgClass, NgFor } from '@angular/common';
+import { CommonModule, NgClass, NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-helperview',
   standalone: true,
-  imports: [MatIconModule, RouterLink, NgClass],
+  imports: [MatIconModule, RouterLink, NgClass, CommonModule],
   templateUrl: './helperview.component.html',
   styleUrl: './helperview.component.scss'
 })
@@ -107,6 +107,6 @@ export class HelperviewComponent {
   }
 
   showsortoptions() {
-    
+
   }
 }

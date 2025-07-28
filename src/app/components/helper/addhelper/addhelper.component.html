@@ -1,1 +1,305 @@
-<p>addhelper works!</p>
+<div class="add-helper-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="title">
+      <button class="back-btn" (click)="router.navigate(['dashboard/helpers/helperview'])" type="button">
+        <mat-icon>keyboard_arrow_left</mat-icon>
+      </button>
+      <h2>Add Helper</h2>
+    </div>
+    <mat-icon>more_vert</mat-icon>
+  </div>
+
+  <!-- Progress Steps -->
+  <div class="main">
+    <div class="progress-container" [attr.data-current-step]="currentStep">
+      <div class="progress-steps">
+        <div class="step" [class]="getStepClass(1)" (click)="goToStep(1)">
+          <div *ngIf="getStepClass(currentStep) !== 'complete'" class="step-number">1</div>
+          <div class="step-label">Helper Details</div>
+        </div>
+        <div class="step" [class]="getStepClass(2)" (click)="goToStep(2)">
+          <div class="step-number">2</div>
+          <div class="step-label">Documents</div>
+        </div>
+        <div class="step" [class]="getStepClass(3)" (click)="goToStep(3)">
+          <div class="step-number">3</div>
+          <div class="step-label">Review</div>
+        </div>
+        <div class="step" [class]="getStepClass(4)">
+          <div class="step-number">4</div>
+          <div class="step-label">Complete</div>
+        </div>
+      </div>
+    </div>
+
+    <form [formGroup]="helperForm" (ngSubmit)="onSubmit()">
+
+      <!-- Step 1: Helper Details Form -->
+      <div class="step-content" *ngIf="currentStep === 1">
+        <div class="form-section">
+          <h3>Personal Details</h3>
+
+          <div class="form-group">
+            <label for="name">Full Name *</label>
+            <input type="text" id="name" formControlName="name" placeholder="Enter full name"
+              [class.error]="helperForm.get('name')?.touched && helperForm.get('name')?.errors">
+            <div class="error-message" *ngIf="helperForm.get('name')?.touched && helperForm.get('name')?.errors">
+              {{ getFieldError('name') }}
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="phone">Phone *</label>
+              <input type="tel" id="phone" formControlName="phone" placeholder="+91 9090901234"
+                [class.error]="helperForm.get('phone')?.touched && helperForm.get('phone')?.errors">
+              <div class="error-message" *ngIf="helperForm.get('phone')?.touched && helperForm.get('phone')?.errors">
+                {{ getFieldError('phone') }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" formControlName="email" placeholder="example@abc.com"
+                [class.error]="helperForm.get('email')?.touched && helperForm.get('email')?.errors">
+              <div class="error-message" *ngIf="helperForm.get('email')?.touched && helperForm.get('email')?.errors">
+                {{ getFieldError('email') }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="gender">Gender *</label>
+              <select id="gender" formControlName="gender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+                <option value="prefer_not_to_say">Prefer not to say</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="languages">Languages *</label>
+              <input type="text" id="languages" formControlName="languages" placeholder="English, Telugu, Hindi"
+                [class.error]="helperForm.get('languages')?.touched && helperForm.get('languages')?.errors">
+              <div class="error-message"
+                *ngIf="helperForm.get('languages')?.touched && helperForm.get('languages')?.errors">
+                {{ getFieldError('languages') }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Service Details</h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="typeOfService">Type *</label>
+              <select id="typeOfService" formControlName="typeOfService">
+                <option value="maid">Maid</option>
+                <option value="cook">Cook</option>
+                <option value="driver">Driver</option>
+                <option value="nurse">Nurse</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="organization">Organization *</label>
+              <input type="text" id="organization" formControlName="organization" placeholder="Springs Helpers"
+                [class.error]="helperForm.get('organization')?.touched && helperForm.get('organization')?.errors">
+              <div class="error-message"
+                *ngIf="helperForm.get('organization')?.touched && helperForm.get('organization')?.errors">
+                {{ getFieldError('organization') }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="type">Choose Vehicle Type</label>
+            <select id="type" formControlName="type">
+              <option value="none">None</option>
+              <option value="bike">Bike</option>
+              <option value="auto">Auto</option>
+              <option value="car">Car</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Documents Upload -->
+      <div class="step-content" *ngIf="currentStep === 2">
+        <div class="document-section">
+          <h3>KYC Document</h3>
+          <p>Upload a KYC document for verification</p>
+
+          <div class="form-group">
+            <label for="status">Document Type *</label>
+            <select id="status" formControlName="status">
+              <option value="adhaar">Aadhaar</option>
+              <option value="pan">PAN</option>
+              <option value="voter">Voter ID</option>
+              <option value="passport">Passport</option>
+            </select>
+          </div>
+
+          <div class="file-upload-area">
+            <div class="upload-box">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <p>Drag and drop your document here or</p>
+              <input type="file" id="kycDocument" (change)="onFileSelected($event)" accept=".pdf,.jpg,.jpeg,.png">
+              <label for="kycDocument" class="upload-btn">Browse Files</label>
+            </div>
+
+            <div class="uploaded-file" *ngIf="selectedFile">
+              <i class="fas fa-file-pdf"></i>
+              <span>{{ selectedFile.name }}</span>
+              <button type="button" (click)="selectedFile = null" class="remove-file">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Review -->
+      <div class="step-content" *ngIf="currentStep === 3">
+        <div class="review-section">
+          <div class="review-card">
+            <div class="helper-avatar">
+              <div class="avatar-circle">
+                {{ helperForm.get('name')?.value?.charAt(0)?.toUpperCase() }}
+              </div>
+              <div class="helper-info">
+                <h4>{{ helperForm.get('name')?.value }}</h4>
+                <p>{{ helperForm.get('typeOfService')?.value | titlecase }}</p>
+              </div>
+            </div>
+
+            <div class="review-details">
+              <div class="detail-section">
+                <h5>Personal Details</h5>
+                <div class="detail-grid">
+                  <div class="detail-row">
+                    <span class="label">Gender</span>
+                    <span class="value">{{ helperForm.get('gender')?.value | titlecase }}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="label">Languages</span>
+                    <span class="value">{{ helperForm.get('languages')?.value }}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="label">Mobile No</span>
+                    <span class="value phone">{{ helperForm.get('phone')?.value }}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="label">Email ID</span>
+                    <span class="value email" [class.empty]="!helperForm.get('email')?.value">
+                      {{ helperForm.get('email')?.value || '-' }}
+                    </span>
+                  </div>
+                  <div class="detail-row kyc-document">
+                    <span class="label">KYC Document</span>
+                    <span class="value">
+                      {{ helperForm.get('status')?.value | titlecase }}
+                      <a class="view-link" *ngIf="selectedFile">
+                        <mat-icon>visibility</mat-icon>
+                        View
+                      </a>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="detail-section">
+                <h5>Service Details</h5>
+                <div class="detail-grid">
+                  <div class="detail-row">
+                    <span class="label">Type</span>
+                    <span class="value">{{ helperForm.get('typeOfService')?.value | titlecase }}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="label">Organization</span>
+                    <span class="value">{{ helperForm.get('organization')?.value }}</span>
+                  </div>
+                  <div class="detail-row full-width">
+                    <span class="label">Joined On</span>
+                    <span class="value">{{ getCurrentDate() }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Success -->
+      <div class="step-content" *ngIf="currentStep === 4">
+        <div class="success-section">
+          <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <h3>Helper Added Successfully!</h3>
+          <p>New helper has been added to your system</p>
+
+          <!-- Employee ID Card Preview -->
+          <div class="id-card-preview" *ngIf="createdHelper">
+            <div class="id-card">
+              <div class="card-header">
+                <span class="company-logo">🏠</span>
+                <span class="company-name">Homes</span>
+              </div>
+              <div class="card-body">
+                <div class="helper-info">
+                  <div class="helper-avatar-small">
+                    {{ createdHelper.name?.charAt(0)?.toUpperCase() }}
+                  </div>
+                  <div class="helper-details">
+                    <h4>{{ createdHelper.name }}</h4>
+                    <p>{{ createdHelper.typeOfService | titlecase }}</p>
+                  </div>
+                </div>
+                <div class="employee-id">
+                  <strong>ID: {{ createdHelper.employeeId || '10090' }}</strong>
+                </div>
+              </div>
+              <div class="qr-section">
+                <div class="qr-code">📱</div>
+                <small>Scan for details</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button type="button" class="btn-secondary" (click)="addAnotherHelper()">
+              Add Another Helper
+            </button>
+            <button type="button" class="btn-primary" (click)="viewHelper()">
+              View Helpers
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="navigation-buttons" *ngIf="currentStep < 4">
+        <button type="button" class="btn-secondary" (click)="previousStep()" [disabled]="currentStep === 1">
+          Previous
+        </button>
+
+        <button type="button" class="btn-primary" (click)="nextStep()" *ngIf="currentStep < 3">
+          Next
+        </button>
+
+        <button type="submit" class="btn-primary" [disabled]="helperForm.invalid || isLoading"
+          *ngIf="currentStep === 3">
+          <span *ngIf="isLoading" class="spinner"></span>
+          {{ isLoading ? 'Adding Helper...' : 'Add Helper' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+</div>

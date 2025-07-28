@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { HelperComponent } from './components/helper/helper.component';
 import { HelperviewComponent } from './components/helper/helperview/helperview.component';
-import { AddhelperComponent } from './components/helper/addhelper/addhelper.component';
+import { AddHelperComponent } from './components/helper/addhelper/addhelper.component';
 
 export const routes: Routes = [
   {
@@ -20,7 +20,7 @@ export const routes: Routes = [
         children: [
           { path: '', redirectTo: 'helperview', pathMatch: 'full' },
           { path: 'helperview', component: HelperviewComponent },
-          { path: 'addhelper', component: AddhelperComponent }
+          { path: 'addhelper', component: AddHelperComponent }
         ]
       },
       // other routes
