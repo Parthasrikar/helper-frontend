@@ -6,3 +6,32 @@
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.mat-mdc-snack-bar-container.success-snackbar {
+  --mdc-snackbar-container-color: #08ec0f; /* Background */
+  --mdc-snackbar-supporting-text-color: white; /* Message text */
+  --mdc-snackbar-action-color: white; /* Close button */
+}
+
+.success-snackbar .mat-simple-snackbar-action {
+  color: white !important; /* Close button text */
+}
+
+
+.mat-mdc-snack-bar-container.delete-snackbar {
+  --mdc-snackbar-container-color: #E53935; /* Red background */
+  --mdc-snackbar-supporting-text-color: white; /* Message text */
+  --mdc-snackbar-action-color: white; /* Close button text */
+  --mdc-snackbar-action-color: white !important; 
+}
+
+
+.mat-mdc-snack-bar-container.delete-snackbar .mdc-button__label {
+  color: white !important; /* ✅ Close button text white */
+}
+
+.mat-mdc-snack-bar-container.success-snackbar .mdc-button__label {
+  color: white !important; /* ✅ Close button text white */
+}
+
+

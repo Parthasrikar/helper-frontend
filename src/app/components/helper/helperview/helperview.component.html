@@ -20,7 +20,10 @@
                 </div>
 
 
-                <input type="text" placeholder="Name, Employee ID, Phone">
+                <input type="text" placeholder="Search by name, employee ID, or email" [(ngModel)]="searchQuery"
+                    (ngModelChange)="onSearch()" class="search-input" />
+
+
 
             </div>
             <div class="addhelperdiv">
@@ -38,7 +41,7 @@
     <div class="helpers">
         <div class="helperlist">
             <div class="listcontainer">
-                @for (helper of helpersList; track $index) {
+                @for (helper of helpersList; track helper._id) {
                 <div class="helper" (click)="changeinital($index)" [ngClass]="{'active' : $index === initalActive}">
                     <div class="profilewithtext">
                         <div class="circle" [style.background]="profileColors[$index % profileColors.length]">
@@ -58,12 +61,12 @@
 
         <div class="helperdetails">
             @if (loading()) {
-                <div>
-                    loading details
-                </div>
+            <div>
+                loading details
+            </div>
             }
             @else {
-                <div class="detailscontainer">
+            <div class="detailscontainer">
                 <div class="detheader">
                     <div class="profilewithtext">
                         <div class="circle" [style.background]="profileColors[initalActive % profileColors.length]">
@@ -76,10 +79,10 @@
                     </div>
 
                     <div class="buttons">
-                        <div class="icon"><mat-icon>edit</mat-icon></div>
+                        <div (click)="editHelper()" class="icon"><mat-icon>edit</mat-icon></div>
                         <div (click)="deleteHelper(singleHelper._id)" class="icon"><mat-icon>delete</mat-icon></div>
                     </div>
-                    
+
                 </div>
                 <section>
                     <div class="title">
@@ -95,13 +98,13 @@
                     <div class="dets">
                         <h5>employee code</h5>
                         <p>{{singleHelper.employeeId}}</p>
-                        
+
                     </div>
                 </section>
 
                 <section>
                     <div class="title">
-                        <h4>PERSONAL  DETAILS</h4>
+                        <h4>PERSONAL DETAILS</h4>
                         <p></p>
                     </div>
                     <div class="dets">
@@ -113,19 +116,19 @@
                     <div class="dets">
                         <h5>LANGUAGES</h5>
                         <p>{{singleHelper.languages}}</p>
-                        
+
                     </div>
 
                     <div class="dets">
                         <h5>email</h5>
                         <p>{{singleHelper.email}}</p>
-                        
+
                     </div>
 
                     <div class="dets">
                         <h5>kyc document</h5>
                         <p>-</p>
-                        
+
                     </div>
                 </section>
 
@@ -143,18 +146,18 @@
                     <div class="dets">
                         <h5>organisation</h5>
                         <p>{{singleHelper.organization}}</p>
-                        
+
                     </div>
 
                     <div class="dets">
                         <h5>joined on</h5>
                         <p>{{ singleHelper.createdAt | date: 'mediumDate' }}</p>
-                        
+
                     </div>
                 </section>
             </div>
             }
-            
+
         </div>
     </div>
 </div>

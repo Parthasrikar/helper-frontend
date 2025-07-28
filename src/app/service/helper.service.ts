@@ -52,4 +52,8 @@ export class HelperService {
   deleteHelper(id: string): Observable<Helper> {
     return this.http.delete<Helper>(`${this.apiUrl}/${id}`).pipe(catchError(this.handleError));
   }
+  searchHelpers(query: string): Observable<Helper[]> {
+  return this.http.get<Helper[]>(`${this.apiUrl}?search=${encodeURIComponent(query)}`);
+}
+
 }

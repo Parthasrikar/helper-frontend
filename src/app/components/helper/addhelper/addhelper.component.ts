@@ -6,6 +6,7 @@ import { HelperService } from '../../../service/helper.service';
 import { CreateHelperDto } from '../../../dto/create-helper.dto';
 import { GenderEnum, DocType, VehiclesType, Roles } from '../../../model/helper.model';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-add-helper',
@@ -30,31 +31,44 @@ export class AddHelperComponent implements OnInit {
   roleOptions = Object.values(Roles);
   vehicleOptions = Object.values(VehiclesType);
   docTypeOptions = Object.values(DocType);
+  editMode: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private helperService: HelperService,
-    public router: Router
+    public router: Router,
+    private snackBar: MatSnackBar
   ) {
-    this.helperForm = this.createForm();
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras?.state as { helperData?: any };
+
+    if (state?.helperData) {
+      this.createdHelper = state.helperData;
+      this.editMode = true;
+      this.helperForm = this.createForm();
+      this.helperForm.patchValue(state.helperData); // Pre-fill
+    } else {
+      this.helperForm = this.createForm();
+    }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   createForm(): FormGroup {
     return this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(2)]],
-      phone: ['', [Validators.required, Validators.pattern(/^\+?[1-9]\d{1,14}$/)]],
-      email: ['', [Validators.email]],
-      gender: [GenderEnum.MALE, Validators.required],
-      languages: ['', Validators.required],
-      typeOfService: [Roles.MAID, Validators.required],
-      organization: ['', Validators.required],
-      type: [VehiclesType.NONE, Validators.required],
-      status: [DocType.ADHAAR, Validators.required],
-      employeeId: [this.generateEmployeeId(), [Validators.required, Validators.min(1)]]
+      name: [this.createdHelper?.name || '', [Validators.required, Validators.minLength(2)]],
+      phone: [this.createdHelper?.phone || '', [Validators.required, Validators.pattern(/^\+?[1-9]\d{1,14}$/)]],
+      email: [this.createdHelper?.email || '', [Validators.email]],
+      gender: [this.createdHelper?.gender || GenderEnum.MALE, Validators.required],
+      languages: [this.createdHelper?.languages?.join(', ') || '', Validators.required],
+      typeOfService: [this.createdHelper?.typeOfService || Roles.MAID, Validators.required],
+      organization: [this.createdHelper?.organization || '', Validators.required],
+      type: [this.createdHelper?.type || VehiclesType.NONE, Validators.required],
+      status: [this.createdHelper?.status || DocType.ADHAAR, Validators.required],
+      employeeId: [this.createdHelper?.employeeId || this.generateEmployeeId(), [Validators.required]]
     });
   }
+
 
   // Navigation methods
   nextStep(): void {
@@ -74,12 +88,12 @@ export class AddHelperComponent implements OnInit {
   }
 
   goToStep(step: number): void {
-  // Only allow navigation to current step or previous completed steps
-  if (step <= this.currentStep) {
-    this.currentStep = step;
+    // Only allow navigation to current step or previous completed steps
+    if (step <= this.currentStep) {
+      this.currentStep = step;
+    }
+    // Don't allow jumping to future steps
   }
-  // Don't allow jumping to future steps
-}
 
   // File handling
   onFileSelected(event: any): void {
@@ -93,30 +107,60 @@ export class AddHelperComponent implements OnInit {
   onSubmit(): void {
     if (this.helperForm.valid) {
       this.isLoading = true;
-      
+
       const formData = this.helperForm.value;
-      const createHelperDto: CreateHelperDto = {
+      const languagesArray = Array.isArray(formData.languages)
+        ? formData.languages.map((lang: string) => lang.trim())
+        : formData.languages.split(',').map((lang: string) => lang.trim());
+
+      const dto: CreateHelperDto = {
         ...formData,
-        languages: formData.languages.split(',').map((lang: string) => lang.trim()),
-        joinedDate: new Date()
+        languages: languagesArray,
+        joinedDate: this.editMode ? this.createdHelper.joinedDate : new Date()
       };
 
-      this.helperService.createHelper(createHelperDto).subscribe({
-        next: (response) => {
-          this.createdHelper = response;
-          this.isLoading = false;
-          this.currentStep = 4; // Move to success step
-        },
-        error: (error) => {
-          console.error('Error creating helper:', error);
-          this.isLoading = false;
-          // Handle error appropriately
-        }
-      });
+      if (this.editMode) {
+        this.helperService.updateHelper(this.createdHelper._id, dto).subscribe({
+          next: (response) => {
+            this.createdHelper = response;
+            this.isLoading = false;
+
+            // ✅ Show toast
+            this.snackBar.open('Helper updated successfully!', 'Close', {
+              duration: 3000, // 3 seconds
+              verticalPosition: 'bottom',
+              horizontalPosition: 'right',
+              panelClass: ['success-snackbar'] // optional custom style
+            });
+
+            // Navigate after showing toast
+            this.router.navigate(['dashboard/helpers/helperview']);
+          },
+          error: (error) => {
+            console.error('Error updating helper:', error);
+            this.isLoading = false;
+          }
+        });
+      }
+      else {
+        this.helperService.createHelper(dto).subscribe({
+          next: (response) => {
+            this.createdHelper = response;
+            this.isLoading = false;
+            this.currentStep = 4;
+          },
+          error: (error) => {
+            console.error('Error creating helper:', error);
+            this.isLoading = false;
+          }
+        });
+      }
     } else {
       this.markFormGroupTouched();
     }
   }
+
+
 
   // Utility methods
   generateEmployeeId(): number {
@@ -162,40 +206,40 @@ export class AddHelperComponent implements OnInit {
 
   // Step validation
   isStepValid(step: number): boolean {
-  // Only allow validation for completed steps (steps before current)
-  if (step >= this.currentStep) {
-    return false;
-  }
-  
-  switch (step) {
-    case 1:
-      const requiredFields = ['name', 'phone', 'gender', 'languages', 'typeOfService', 'organization'];
-      return requiredFields.every(field => this.helperForm.get(field)?.valid);
-    case 2:
-      return true; // Document upload is optional
-    case 3:
-      return this.helperForm.valid;
-    default:
+    // Only allow validation for completed steps (steps before current)
+    if (step >= this.currentStep) {
       return false;
+    }
+
+    switch (step) {
+      case 1:
+        const requiredFields = ['name', 'phone', 'gender', 'languages', 'typeOfService', 'organization'];
+        return requiredFields.every(field => this.helperForm.get(field)?.valid);
+      case 2:
+        return true; // Document upload is optional
+      case 3:
+        return this.helperForm.valid;
+      default:
+        return false;
+    }
   }
-}
 
   getStepClass(step: number): string {
-  if (step === this.currentStep) {
-    return 'current';
-  } else if (step < this.currentStep) {
-    return 'completed';
-  } else {
-    return 'pending';
+    if (step === this.currentStep) {
+      return 'current';
+    } else if (step < this.currentStep) {
+      return 'completed';
+    } else {
+      return 'pending';
+    }
   }
-}
 
-getCurrentDate(): string {
-  const today = new Date();
-  const day = today.getDate();
-  const month = today.toLocaleString('default', { month: 'short' });
-  const year = today.getFullYear();
-  return `${day} ${month} ${year}`;
-}
+  getCurrentDate(): string {
+    const today = new Date();
+    const day = today.getDate();
+    const month = today.toLocaleString('default', { month: 'short' });
+    const year = today.getFullYear();
+    return `${day} ${month} ${year}`;
+  }
 
 }
