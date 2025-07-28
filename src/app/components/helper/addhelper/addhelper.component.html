@@ -5,7 +5,13 @@
       <button class="back-btn" (click)="router.navigate(['dashboard/helpers/helperview'])" type="button">
         <mat-icon>keyboard_arrow_left</mat-icon>
       </button>
-      <h2>Add Helper</h2>
+      @if (editMode) {
+        <h2>Edit helper</h2>
+      }
+      @else {
+        <h2>Add Helper</h2>
+      }
+      
     </div>
     <mat-icon>more_vert</mat-icon>
   </div>

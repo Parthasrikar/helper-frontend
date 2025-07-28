@@ -32,6 +32,7 @@
 
         .controllers {
             display: flex;
+            align-items: center;
             gap: 1.2vw;
 
             mat-icon {
@@ -48,6 +49,17 @@
                 border: 1px solid #EEEEEE;
                 border-radius: 0.3vw;
             }
+
+            .noOfHelpers {
+                color: #414141;
+                font-size: 1.1vw;
+            }
+
+            mat-menu {
+                font-size: 1vw;
+            }
+
+
         }
 
         .addhelperdiv {
@@ -109,8 +121,8 @@
         height: 100%;
         width: 30%;
         // background-color: green;
-        padding: 0vw 1vw 0vw 1vw ;
-        
+        padding: 0vw 1vw 0vw 1vw;
+
 
         .listcontainer {
             height: 100%;
@@ -120,7 +132,7 @@
             transform: translateY(1vw);
             overflow-y: scroll;
         }
-        
+
     }
 
     .helerdetails {
@@ -188,7 +200,7 @@
     height: 100%;
     // background-color: red;
     padding: 1vw 0vw 0vw 0vw;
-    
+
 
     .detailscontainer {
         height: 100%;
@@ -202,27 +214,33 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             .buttons {
                 display: flex;
                 gap: 1.5vw;
             }
+
             .circle {
                 width: 4vw;
                 height: 4vw;
+
                 span {
                     font-size: 2vw;
                 }
             }
+
             .text {
                 h3 {
                     font-size: 1.5vw;
                     font-weight: 500;
                 }
+
                 p {
                     font-size: 1.1vw;
                     line-height: 2vw;
                 }
             }
+
             mat-icon {
                 font-size: 1.8vw;
             }
@@ -230,6 +248,7 @@
 
         section {
             width: 100%;
+
             .title {
                 width: 100%;
                 padding: 0.5vw 1vw;
@@ -238,11 +257,13 @@
                 align-items: center;
                 justify-content: space-around;
                 gap: 1vw;
+
                 p {
                     width: 75%;
                     height: 1px;
                     background-color: #d6d6d6;
                 }
+
                 h4 {
                     font-size: 1.1vw;
                     font-weight: 500;
@@ -257,11 +278,13 @@
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
+
                 h5 {
                     color: #BDBDC3;
                     font-weight: 400;
                     text-transform: uppercase;
                 }
+
                 p {
                     color: #414141;
                     text-transform: capitalize;
@@ -273,7 +296,19 @@
 }
 
 .success-snackbar {
-  background-color: #4CAF50; /* Green */
-  color: white;
-  font-weight: bold;
+    background-color: #4CAF50;
+    /* Green */
+    color: white;
+    font-weight: bold;
+}
+
+.filter-section {
+    padding: 8px 16px;
+    min-width: 200px;
+}
+
+.filter-actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 16px;
 }

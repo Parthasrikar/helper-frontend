@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HelperService } from '../../../service/helper.service';
 import { CreateHelperDto } from '../../../dto/create-helper.dto';
-import { GenderEnum, DocType, VehiclesType, Roles } from '../../../model/helper.model';
+import { GenderEnum, DocType, VehiclesType, Roles, Helper } from '../../../model/helper.model';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -40,7 +40,7 @@ export class AddHelperComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras?.state as { helperData?: any };
+    const state = navigation?.extras?.state as { helperData?: Helper };
 
     if (state?.helperData) {
       this.createdHelper = state.helperData;

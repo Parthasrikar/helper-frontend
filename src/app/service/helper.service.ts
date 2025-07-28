@@ -29,9 +29,11 @@ export class HelperService {
 }
 
 
-  getAllHelper(): Observable<Helper[]> {
-    return this.http.get<Helper[]>(this.apiUrl).pipe(catchError(this.handleError))
-  }
+  // Remove the separate searchHelpers method and update getAllHelper:
+getAllHelper(search?: string): Observable<Helper[]> {
+    const url = search ? `${this.apiUrl}?search=${encodeURIComponent(search)}` : this.apiUrl;
+    return this.http.get<Helper[]>(url);
+}
 
   getHelperById(id: string): Observable<Helper> {
     return this.http.get<Helper>(`${this.apiUrl}/${id}`).pipe(catchError(this.handleError));
@@ -52,8 +54,5 @@ export class HelperService {
   deleteHelper(id: string): Observable<Helper> {
     return this.http.delete<Helper>(`${this.apiUrl}/${id}`).pipe(catchError(this.handleError));
   }
-  searchHelpers(query: string): Observable<Helper[]> {
-  return this.http.get<Helper[]>(`${this.apiUrl}?search=${encodeURIComponent(query)}`);
-}
 
 }

@@ -8,12 +8,51 @@
 
         <div class="options">
             <div class="controllers">
-                <div (click)="showsortoptions()" class="icon">
-                    <mat-icon class="rotate">compare_arrows</mat-icon>
+                <div class="icon" [matMenuTriggerFor]="sortMenu">
+                    <mat-icon>compare_arrows</mat-icon>
                 </div>
-                <div class="icon">
+
+                <mat-menu #sortMenu="matMenu">
+                    <button mat-menu-item (click)="sortHelpers('name')">Helpers Name (A–Z)</button>
+                    <button mat-menu-item (click)="sortHelpers('employeeId')">Employee ID</button>
+                </mat-menu>
+
+                <!-- Filter Button -->
+                <div class="icon" [matMenuTriggerFor]="filterMenu" (click)="$event.stopPropagation()">
                     <mat-icon>filter_list</mat-icon>
                 </div>
+
+                <!-- Filter Menu -->
+                <mat-menu #filterMenu="matMenu" (click)="$event.stopPropagation()">
+                    <div style="padding: 10px; width: 200px;">
+
+                        <!-- Service Filter -->
+                        <mat-form-field appearance="outline" style="width: 100%;">
+                            <mat-label>Service</mat-label>
+                            <mat-select [(ngModel)]="selectedService">
+                                <mat-option value="">All</mat-option>
+                                <mat-option *ngFor="let s of uniqueServices" [value]="s">{{ s }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <!-- Organization Filter -->
+                        <mat-form-field appearance="outline" style="width: 100%;">
+                            <mat-label>Organization</mat-label>
+                            <mat-select [(ngModel)]="selectedOrganization">
+                                <mat-option value="">All</mat-option>
+                                <mat-option *ngFor="let o of uniqueOrganizations" [value]="o">{{ o }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <!-- Buttons -->
+                        <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                            <button mat-button (click)="resetFilters()">Reset</button>
+                            <button mat-flat-button color="primary" (click)="applyFilters()">Apply</button>
+                        </div>
+                    </div>
+                </mat-menu>
+
+
 
                 <div class="icon">
                     <mat-icon>calendar_today</mat-icon>
@@ -22,6 +61,8 @@
 
                 <input type="text" placeholder="Search by name, employee ID, or email" [(ngModel)]="searchQuery"
                     (ngModelChange)="onSearch()" class="search-input" />
+
+                <p class="noOfHelpers">Found: {{ noOfHelpers }} helpers</p>
 
 
 
@@ -80,7 +121,7 @@
 
                     <div class="buttons">
                         <div (click)="editHelper()" class="icon"><mat-icon>edit</mat-icon></div>
-                        <div (click)="deleteHelper(singleHelper._id)" class="icon"><mat-icon>delete</mat-icon></div>
+                        <div (click)="deleteHelper(singleHelper._id, singleHelper.name)" class="icon"><mat-icon>delete</mat-icon></div>
                     </div>
 
                 </div>
