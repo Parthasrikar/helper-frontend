@@ -18,14 +18,16 @@
                 </mat-menu>
 
                 <!-- Filter Button -->
-                <div class="icon" [matMenuTriggerFor]="filterMenu" (click)="$event.stopPropagation()">
+                <!-- Trigger Icon -->
+                <!-- Filter Icon -->
+                <div class="icon" (click)="openFilterOverlay($event)">
                     <mat-icon>filter_list</mat-icon>
                 </div>
 
-                <!-- Filter Menu -->
-                <mat-menu #filterMenu="matMenu" (click)="$event.stopPropagation()">
-                    <div style="padding: 10px; width: 200px;">
 
+                <!-- Overlay Filter Template -->
+                <ng-template #filterTemplate>
+                    <div class="filter-panel" (click)="$event.stopPropagation()">
                         <!-- Service Filter -->
                         <mat-form-field appearance="outline" style="width: 100%;">
                             <mat-label>Service</mat-label>
@@ -47,10 +49,12 @@
                         <!-- Buttons -->
                         <div style="display: flex; justify-content: space-between; margin-top: 10px;">
                             <button mat-button (click)="resetFilters()">Reset</button>
-                            <button mat-flat-button color="primary" (click)="applyFilters()">Apply</button>
+                            <button mat-flat-button color="primary"
+                                (click)="applyFilters(); closeFilterOverlay()">Apply</button>
                         </div>
                     </div>
-                </mat-menu>
+                </ng-template>
+
 
 
 
@@ -121,7 +125,9 @@
 
                     <div class="buttons">
                         <div (click)="editHelper()" class="icon"><mat-icon>edit</mat-icon></div>
-                        <div (click)="deleteHelper(singleHelper._id, singleHelper.name)" class="icon"><mat-icon>delete</mat-icon></div>
+                        <div (click)="deleteHelper(singleHelper._id, singleHelper.name)" class="icon">
+                            <mat-icon>delete</mat-icon>
+                        </div>
                     </div>
 
                 </div>
