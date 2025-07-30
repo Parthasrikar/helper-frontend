@@ -99,66 +99,137 @@ export class AddHelperComponent implements OnInit {
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        this.snackBar.open('File size must be less than 5MB', 'Close', {
+          duration: 3000,
+          panelClass: ['error-snackbar']
+        });
+        return;
+      }
+
+      // Validate file type
+      const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+      if (!allowedTypes.includes(file.type)) {
+        this.snackBar.open('Only PDF, JPG, JPEG, and PNG files are allowed', 'Close', {
+          duration: 3000,
+          panelClass: ['error-snackbar']
+        });
+        return;
+      }
+
       this.selectedFile = file;
     }
   }
 
   // Form submission
-  onSubmit(): void {
-    if (this.helperForm.valid) {
-      this.isLoading = true;
+  // Replace your existing onSubmit method with this: 
+onSubmit(): void {
+  if (this.helperForm.valid) {
+    this.isLoading = true;
 
-      const formData = this.helperForm.value;
-      const languagesArray = Array.isArray(formData.languages)
-        ? formData.languages.map((lang: string) => lang.trim())
-        : formData.languages.split(',').map((lang: string) => lang.trim());
+    const formData = this.helperForm.value;
+    const languagesArray = Array.isArray(formData.languages)
+      ? formData.languages.map((lang: string) => lang.trim())
+      : formData.languages.split(',').map((lang: string) => lang.trim());
 
-      const dto: CreateHelperDto = {
-        ...formData,
-        languages: languagesArray,
-        joinedDate: this.editMode ? this.createdHelper.joinedDate : new Date()
-      };
+    const dto: CreateHelperDto = {
+      ...formData,
+      languages: languagesArray,
+      joinedDate: this.editMode ? this.createdHelper.joinedDate : new Date()
+    };
 
-      if (this.editMode) {
-        this.helperService.updateHelper(this.createdHelper._id, dto).subscribe({
-          next: (response) => {
-            this.createdHelper = response;
-            this.isLoading = false;
-
-            // ✅ Show toast
-            this.snackBar.open('Helper updated successfully!', 'Close', {
-              duration: 3000, // 3 seconds
-              verticalPosition: 'bottom',
-              horizontalPosition: 'right',
-              panelClass: ['success-snackbar'] // optional custom style
-            });
-
-            // Navigate after showing toast
-            this.router.navigate(['dashboard/helpers/helperview']);
-          },
-          error: (error) => {
-            console.error('Error updating helper:', error);
-            this.isLoading = false;
+    if (this.editMode) {
+      this.helperService.updateHelper(this.createdHelper._id, dto).subscribe({
+        next: (response) => {
+          this.createdHelper = response;
+          
+          // Upload KYC document if file is selected
+          if (this.selectedFile) {
+            this.uploadKycDocument(response._id);
+          } else {
+            this.handleUpdateSuccess();
           }
-        });
-      }
-      else {
-        this.helperService.createHelper(dto).subscribe({
-          next: (response) => {
-            this.createdHelper = response;
+        },
+        error: (error) => {
+          console.error('Error updating helper:', error);
+          this.isLoading = false;
+        }
+      });
+    }
+    else {
+      this.helperService.createHelper(dto).subscribe({
+        next: (response) => {
+          this.createdHelper = response;
+          
+          // Upload KYC document if file is selected
+          if (this.selectedFile) {
+            this.uploadKycDocument(response._id);
+          } else {
             this.isLoading = false;
             this.currentStep = 4;
-          },
-          error: (error) => {
-            console.error('Error creating helper:', error);
-            this.isLoading = false;
           }
-        });
-      }
-    } else {
-      this.markFormGroupTouched();
+        },
+        error: (error) => {
+          console.error('Error creating helper:', error);
+          this.isLoading = false;
+        }
+      });
     }
+  } else {
+    this.markFormGroupTouched();
   }
+}
+
+// Add these helper methods to your component:
+private uploadKycDocument(helperId: string): void {
+  if (!this.selectedFile) {
+    this.isLoading = false;
+    if (this.editMode) {
+      this.handleUpdateSuccess();
+    } else {
+      this.currentStep = 4;
+    }
+    return;
+  }
+
+  this.helperService.uploadKycDocument(helperId, this.selectedFile).subscribe({
+    next: (response) => {
+      this.createdHelper = response;
+      this.isLoading = false;
+      
+      if (this.editMode) {
+        this.handleUpdateSuccess();
+      } else {
+        this.currentStep = 4;
+      }
+    },
+    error: (error) => {
+      console.error('Error uploading KYC document:', error);
+      this.snackBar.open('Helper created but KYC upload failed', 'Close', {
+        duration: 3000,
+        panelClass: ['error-snackbar']
+      });
+      this.isLoading = false;
+      
+      if (this.editMode) {
+        this.handleUpdateSuccess();
+      } else {
+        this.currentStep = 4;
+      }
+    }
+  });
+}
+
+private handleUpdateSuccess(): void {
+  this.snackBar.open('Helper updated successfully!', 'Close', {
+    duration: 3000,
+    verticalPosition: 'bottom',
+    horizontalPosition: 'right',
+    panelClass: ['success-snackbar']
+  });
+  this.router.navigate(['dashboard/helpers/helperview']);
+}
 
 
 

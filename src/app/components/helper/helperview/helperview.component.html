@@ -17,9 +17,6 @@
                     <button mat-menu-item (click)="sortHelpers('employeeId')">Employee ID</button>
                 </mat-menu>
 
-                <!-- Filter Button -->
-                <!-- Trigger Icon -->
-                <!-- Filter Icon -->
                 <div class="icon" (click)="openFilterOverlay($event)">
                     <mat-icon>filter_list</mat-icon>
                 </div>
@@ -84,7 +81,7 @@
 
 
     <div class="helpers">
-        <div class="helperlist">
+        <div class="helperlist"> 
             <div class="listcontainer">
                 @for (helper of helpersList; track helper._id) {
                 <div class="helper" (click)="changeinital($index)" [ngClass]="{'active' : $index === initalActive}">
@@ -169,13 +166,18 @@
                     <div class="dets">
                         <h5>email</h5>
                         <p>{{singleHelper.email}}</p>
-
                     </div>
 
                     <div class="dets">
                         <h5>kyc document</h5>
-                        <p>-</p>
+                        <p *ngIf="!singleHelper.kycUrl">-</p>
+                        <p *ngIf="singleHelper.kycUrl">
+                            <a [href]="singleHelper.kycUrl" target="_blank" class="kyc-link">
+                                <mat-icon>visibility</mat-icon>
+                                View Document
+                            </a>
 
+                        </p>
                     </div>
                 </section>
 

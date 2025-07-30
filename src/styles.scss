@@ -34,4 +34,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   color: white !important; /* ✅ Close button text white */
 }
 
+ngx-loading-bar {
+  --loading-bar-color: #f11946;  /* YouTube red */
+  --loading-bar-height: 3px;
+}
 
+/* Hide spinner */
+ngx-loading-bar .ngx-loading-bar-spinner {
+  display: none;
+}

@@ -20,7 +20,10 @@ export const routes: Routes = [
         children: [
           { path: '', redirectTo: 'helperview', pathMatch: 'full' },
           { path: 'helperview', component: HelperviewComponent },
-          { path: 'addhelper', component: AddHelperComponent }
+          {
+            path: 'addhelper', loadComponent: () => import('./components/helper/addhelper/addhelper.component')
+              .then(c => c.AddHelperComponent)
+          }
         ]
       },
       // other routes

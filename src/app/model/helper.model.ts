@@ -27,7 +27,7 @@ export enum Roles {
 }
 
 export interface Helper {
-  _id : string;
+  _id: string;
   id: string;
   name: string;
   typeOfService: Roles;
@@ -37,10 +37,12 @@ export interface Helper {
   gender: GenderEnum;
   languages: string[];
   employeeId: number;
-  joinedDate?: Date;
+  joinedDate?: string;       // ISO date from API
   type: VehiclesType;
   status: DocType;
   kycUrl?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  kycFileName?: string;
+  kycUploadedAt?: string;    // ISO date from API
+  createdAt?: string;        // ISO date from API
+  updatedAt?: string;        // ISO date from API
 }

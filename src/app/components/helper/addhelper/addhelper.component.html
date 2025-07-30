@@ -75,6 +75,7 @@
             </div>
           </div>
 
+
           <div class="form-row">
             <div class="form-group">
               <label for="gender">Gender *</label>
@@ -299,11 +300,24 @@
           Next
         </button>
 
-        <button type="submit" class="btn-primary" [disabled]="helperForm.invalid || isLoading"
+        @if(editMode) {
+          <button type="submit" class="btn-primary" [disabled]="helperForm.invalid || isLoading"
           *ngIf="currentStep === 3">
+          
+          <span *ngIf="isLoading" class="spinner"></span>
+          {{ isLoading ? 'Editing Helper...' : 'Edit Helper' }}
+        </button>
+        }
+        @else {
+          <button type="submit" class="btn-primary" [disabled]="helperForm.invalid || isLoading"
+          *ngIf="currentStep === 3">
+          
           <span *ngIf="isLoading" class="spinner"></span>
           {{ isLoading ? 'Adding Helper...' : 'Add Helper' }}
         </button>
+        }
+
+        
       </div>
     </form>
   </div>

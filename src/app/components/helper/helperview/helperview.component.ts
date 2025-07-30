@@ -20,9 +20,6 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
 
 
-
-
-
 @Component({
   selector: 'app-helperview',
   standalone: true,
@@ -66,7 +63,7 @@ export class HelperviewComponent {
 
   selectedService = '';
   selectedOrganization = '';
-  allHelpers: Helper[] = []; // keep a copy of full list
+  allHelpers: Helper[] = []; 
 
   get uniqueServices() {
     return [...new Set(this.allHelpers.map(h => h.typeOfService))];
@@ -93,8 +90,8 @@ export class HelperviewComponent {
   fetchHelpers(): void {
     this.helperservice.getAllHelper().subscribe({
       next: (data: Helper[]) => {
-        this.allHelpers = [...data];   // Keep original list for filtering
-        this.helpersList = [...data];  // Display list
+        this.allHelpers = [...data];   
+        this.helpersList = [...data];  
         this.noOfHelpers = data.length;
 
         const defaultId = this.helpersList[this.initalActive]?._id;
@@ -108,8 +105,6 @@ export class HelperviewComponent {
 
 
 
-
-
   private searchTimeout: any;
 
   onSearch(): void {
@@ -119,7 +114,6 @@ export class HelperviewComponent {
       const query = this.searchQuery.trim();
 
       if (!query) {
-        // Empty search → fetch all
         this.fetchHelpers();
       } else {
         console.log("searching");
@@ -164,8 +158,8 @@ export class HelperviewComponent {
     });
   }
 
-  trackByHelperId(index: number, helper: any) {
-    return helper._id; // or just index if no unique ID
+  trackByHelperId(index: number, helper: Helper) {
+    return helper._id; 
   }
 
   changeinital(idx: number): void {
@@ -182,7 +176,7 @@ export class HelperviewComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) { // User confirmed
+      if (result) { 
         this.helperservice.deleteHelper(id).subscribe({
           next: () => {
             this.snackBar.open('Helper deleted successfully!', 'Close', {
@@ -259,10 +253,4 @@ export class HelperviewComponent {
     this.overlayRef?.dispose();
   }
 
-
-
-
-
 }
-
-
